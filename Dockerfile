@@ -24,6 +24,7 @@ COPY --chown=nginx:nginx ./settings.js.template /etc/nginx/templates/settings.js
 COPY --chown=nginx:nginx ng.conf.template /etc/nginx/templates/default.conf.template
 
 ENV SERVER_LOCK=false SERVER_NAME="" SERVER_TYPE="" SERVER_URL="" REMOTE_URL=""
+ENV NAVIDROME_UPSTREAM="http://host.docker.internal:4533"
 ENV LEGACY_AUTHENTICATION="" ANALYTICS_DISABLED="" PUBLIC_PATH="/"
 
 EXPOSE 9180
