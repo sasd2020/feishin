@@ -1,30 +1,152 @@
 /* stylelint-disable selector-class-pattern */
 @import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=Alegreya+Sans:wght@400;500;700&family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@400;500&display=swap');
 
-/* Everyday text in a clean sans; titles in the serif */
+/* Japandi Dark: deep warm charcoal, plenty of space, quiet controls.
+   Oak is kept for small highlights only (active item, thin lines). */
+
+/* ---------- Type: serif titles at a light weight, clean sans elsewhere ---------- */
 :root {
     --theme-content-font-family: 'Alegreya Sans', 'Noto Sans TC', 'PingFang TC', system-ui, sans-serif !important;
     --japandi-serif: 'Alegreya', 'Noto Serif TC', 'Songti TC', georgia, serif;
+    --japandi-glass: rgb(255 255 255 / 8%);
+    --japandi-glass-hover: rgb(255 255 255 / 14%);
+    --japandi-line: rgb(255 255 255 / 5%);
 }
 
 .fs-text-title-module-root,
+.fs-library-header-module-title,
 .fs-item-card-module-row.fs-item-card-module-bold {
     font-family: var(--japandi-serif) !important;
+    font-weight: 400 !important;
     letter-spacing: 0.01em;
 }
 
-/* Faint paper grain over the whole app */
+/* Album name bright, artist quiet */
+.fs-item-card-module-row.fs-item-card-module-bold {
+    color: var(--theme-colors-foreground) !important;
+}
+
+/* ---------- Surfaces: a deep, clean base; sidebar and player bar a shade
+   deeper still, set apart by hairlines rather than colour ---------- */
+html {
+    background: rgb(20 18 16);
+}
+
+#main-content {
+    background: rgb(20 18 16) !important;
+}
+
+.fs-left-sidebar-module-container {
+    background: rgb(16 14 12) !important;
+    border-right: 1px solid var(--japandi-line);
+}
+
+.fs-player-bar-module-container {
+    background: rgb(16 14 12) !important;
+    border-top: 1px solid var(--japandi-line);
+}
+
+/* Cold-press paper: barely there; plain dark from afar, tooth up close */
 body::after {
     position: fixed;
     inset: 0;
     z-index: 9999;
     pointer-events: none;
     content: '';
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='320'%3E%3Cfilter%20id='p'%20x='0'%20y='0'%20width='100%25'%20height='100%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.13'%20numOctaves='4'%20seed='11'%20stitchTiles='stitch'%20result='n'/%3E%3CfeDiffuseLighting%20in='n'%20surfaceScale='1.6'%20lighting-color='%23fff'%20diffuseConstant='1'%3E%3CfeDistantLight%20azimuth='225'%20elevation='50'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url%28%23p%29'/%3E%3C/svg%3E");
+    background-size: 320px 320px;
+    mix-blend-mode: soft-light;
+    opacity: 0.06;
 }
 
-/* Covers: soft corners, a hairline frame for dark covers, a gentle lift */
+/* ---------- Buttons: no heavy solid discs; translucent glass or outline ---------- */
+.fs-play-button-module-text-button,
+.fs-player-button-module-main,
+.fs-item-card-controls-module-primary {
+    color: var(--theme-colors-foreground) !important;
+    background: var(--japandi-glass) !important;
+    border: 1px solid rgb(255 255 255 / 10%) !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(10px);
+}
+
+.fs-play-button-module-text-button:hover,
+.fs-player-button-module-main:hover,
+.fs-item-card-controls-module-primary:hover {
+    background: var(--japandi-glass-hover) !important;
+}
+
+.fs-play-button-module-text-button svg,
+.fs-player-button-module-main svg,
+.fs-item-card-controls-module-primary svg {
+    color: var(--theme-colors-foreground) !important;
+    fill: currentcolor !important;
+}
+
+/* ---------- Less on screen ---------- */
+
+/* Sidebar: keep Home, Favorites, Albums, Tracks, Album Artists, Playlists */
+.fs-left-sidebar-module-container a[href='#/library/artists'],
+.fs-left-sidebar-module-container a[href='#/library/genres'],
+.fs-left-sidebar-module-container a[href='#/library/folders'],
+.fs-left-sidebar-module-container a[href='#/radio'] {
+    display: none !important;
+}
+
+/* Collapsed sidebar: icons only, no cramped captions */
+.fs-collapsed-sidebar-item-module-text-wrapper {
+    display: none !important;
+}
+
+/* Album cards: name and artist only; on hover a single quiet play button */
+.fs-item-card-module-detail-container > .fs-item-card-module-row:nth-child(n + 3),
+.fs-item-card-module-rating-badge,
+.fs-item-card-controls-module-secondary,
+.fs-item-card-controls-module-rating {
+    display: none !important;
+}
+
+/* Player bar: no rating or Auto DJ row; sleep timer and player settings
+   hidden (lyrics, favourite, queue and volume stay) */
+.fs-playerbar-module-right-grid-item > div > .mantine-Group-root:first-child {
+    visibility: hidden;
+}
+
+.fs-playerbar-module-right-grid-item > div > .mantine-Group-root:nth-child(2) > :nth-child(-n + 2) {
+    display: none !important;
+}
+
+/* Progress bar: a 2px line; the handle shows only on hover */
+.fs-playerbar-slider-module-slider-container .mantine-Slider-track {
+    height: 2px !important;
+}
+
+.fs-playerbar-slider-module-slider-container .mantine-Slider-thumb {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.fs-playerbar-slider-module-slider-container:hover .mantine-Slider-thumb {
+    opacity: 1;
+}
+
+/* A-Z index: hidden until the pointer reaches it */
+.fs-alphabet-index-module-index {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fs-alphabet-index-module-index:hover,
+.fs-alphabet-index-module-index.fs-alphabet-index-module-dragging {
+    opacity: 1;
+}
+
+/* ---------- Space ---------- */
+.fs-item-grid-list-module-item-grid-container {
+    padding-left: 24px !important;
+}
+
+/* ---------- Covers: soft corners, a hairline frame, a gentle lift ---------- */
 .fs-item-card-module-image-container,
 .fs-image-module-image {
     border-radius: 8px !important;
@@ -42,16 +164,13 @@ body::after {
     transform: translateY(-2px);
 }
 
-/* Panels and menus: warm, flat, thin borders */
+/* ---------- Menus and dialogs: the one lighter sheet ---------- */
 .fs-modal-module-content,
 .fs-select-module-dropdown,
 .fs-popover-module-dropdown,
 .fs-context-menu-module-content,
 .fs-dropdown-menu-module-menu-dropdown {
+    background: rgb(32 29 26) !important;
     border: 1px solid rgb(230 223 211 / 8%) !important;
     box-shadow: 0 18px 40px rgb(0 0 0 / 45%) !important;
-}
-
-.fs-player-bar-module-container {
-    border-top: 1px solid rgb(230 223 211 / 6%);
 }
