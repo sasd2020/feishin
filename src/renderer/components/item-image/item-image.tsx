@@ -88,6 +88,14 @@ const BaseItemImage = (
     );
 };
 
+// Image sizes are in CSS pixels; on high-density (Retina) screens a cover
+// drawn 200px wide needs ~400 real pixels to look sharp. 0 means original.
+const forScreen = (size: number | undefined) => {
+    if (!size) return size;
+    const density = Math.min(2, Math.max(1, globalThis.devicePixelRatio || 1));
+    return Math.round(size * density);
+};
+
 export const ItemImage = memo(BaseItemImage);
 
 interface UseItemImageUrlProps {
@@ -128,7 +136,7 @@ export const useItemImageUrl = (args: UseItemImageUrlProps) => {
             api.controller.getImageUrl({
                 apiClientProps: { serverId: targetServerId },
                 baseUrl,
-                query: { id, itemType, size: size ?? sizeByType },
+                query: { id, itemType, size: forScreen(size ?? sizeByType) },
             }) || undefined
         );
     }, [args.serverId, id, imageUrl, itemType, serverId, size, sizeByType, useRemoteUrl]);
@@ -165,7 +173,7 @@ export const useItemImageRequest = (args: UseItemImageUrlProps) => {
             api.controller.getImageRequest({
                 apiClientProps: { serverId: targetServerId },
                 baseUrl,
-                query: { id, itemType, size: size ?? sizeByType },
+                query: { id, itemType, size: forScreen(size ?? sizeByType) },
             }) || undefined
         );
     }, [args.serverId, id, imageUrl, itemType, serverId, size, sizeByType, useRemoteUrl]);
@@ -202,7 +210,7 @@ export function getItemImageRequest(args: UseItemImageUrlProps) {
         api.controller.getImageRequest({
             apiClientProps: { serverId },
             baseUrl,
-            query: { id, itemType, size: size ?? sizeByType },
+            query: { id, itemType, size: forScreen(size ?? sizeByType) },
         }) || undefined
     );
 }
@@ -235,7 +243,7 @@ export function getItemImageUrl(args: UseItemImageUrlProps) {
         api.controller.getImageUrl({
             apiClientProps: { serverId },
             baseUrl,
-            query: { id, itemType, size: size ?? sizeByType },
+            query: { id, itemType, size: forScreen(size ?? sizeByType) },
         }) || undefined
     );
 }
