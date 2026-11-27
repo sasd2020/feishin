@@ -12,6 +12,8 @@ RUN pnpm install
 
 # Copy code and build with cached modules
 COPY . .
+# The web build needs more than Node's default heap
+ENV NODE_OPTIONS=--max-old-space-size=6144
 RUN pnpm run build:web
 
 # --- Production stage
