@@ -8,6 +8,7 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from '/@/renderer/app';
 import { queryClient } from '/@/renderer/lib/react-query';
+import { initSmoothScroll } from '/@/renderer/lib/smooth-scroll';
 
 function createIDBPersister(idbValidKey: IDBValidKey = 'reactQuery') {
     return {
@@ -24,6 +25,8 @@ function createIDBPersister(idbValidKey: IDBValidKey = 'reactQuery') {
 }
 
 const indexedDbPersister = createIDBPersister('feishin');
+
+initSmoothScroll();
 
 createRoot(document.getElementById('root')!).render(
     <PersistQueryClientProvider
