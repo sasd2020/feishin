@@ -425,7 +425,9 @@ const normalizeAlbum = (
             songCount: null,
         })),
         id: item.id,
-        imageId: item.coverArtId || item.id,
+        // With the cover's hash in the id, Navidrome lets the browser cache the
+        // image for a year (a new cover gets a new hash, so nothing goes stale)
+        imageId: item.imageHash ? `al-${item.id}_${item.imageHash}` : item.coverArtId || item.id,
         imageUrl: null,
         isCompilation: item.compilation,
         lastPlayedAt: normalizePlayDate(item),
