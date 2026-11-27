@@ -71,6 +71,8 @@ export interface ItemListGridComponentProps<TQuery> extends ItemListComponentPro
 }
 
 export interface ItemListHandle {
+    // Scroll position (px) that puts the item at the top, without scrolling
+    getOffsetForIndex?: (index: number) => null | number;
     internalState: ItemListStateActions;
     scrollToIndex: (
         index: number,

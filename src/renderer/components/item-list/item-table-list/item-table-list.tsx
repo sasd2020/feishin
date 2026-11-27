@@ -1714,6 +1714,7 @@ const BaseItemTableList = ({
 
     useTableImperativeHandle({
         autoScrollToActiveRow,
+        calculateScrollTopForIndex,
         handleRef,
         internalState,
         mapDataIndexToRowIndex,

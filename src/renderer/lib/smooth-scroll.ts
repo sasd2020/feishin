@@ -34,30 +34,58 @@ const sweep = () => {
     });
 };
 
+const LERP = 0.09;
+let enabled = false;
+
+const lenisFor = (area: HTMLElement): Lenis => {
+    const existing = instances.get(area);
+    if (existing) return existing;
+    sweep();
+    const lenis = new Lenis({
+        allowNestedScroll: true,
+        autoRaf: true,
+        content: (area.firstElementChild as HTMLElement | null) || area,
+        lerp: LERP,
+        prevent: (node) => !!node.closest?.(NATIVE),
+        smoothWheel: true,
+        syncTouch: false,
+        wrapper: area,
+    });
+    instances.set(area, lenis);
+    return lenis;
+};
+
 const onWheel = (e: WheelEvent) => {
     if (e.ctrlKey || e.defaultPrevented) return; // pinch-zoom, or already handled
     const area = scrollAreaFor(e.target);
-    if (!area || instances.has(area)) return;
-    sweep();
-    const content = (area.firstElementChild as HTMLElement | null) || area;
     // Created during this event's capture phase, so its own wheel listener on
     // the area still receives this same event.
-    instances.set(
-        area,
-        new Lenis({
-            allowNestedScroll: true,
-            autoRaf: true,
-            content,
-            lerp: 0.09,
-            prevent: (node) => !!node.closest?.(NATIVE),
-            smoothWheel: true,
-            syncTouch: false,
-            wrapper: area,
-        }),
-    );
+    if (area) lenisFor(area);
+};
+
+// The scroll area inside an element (e.g. a virtual list's viewport).
+export const findScrollArea = (root: HTMLElement | null): HTMLElement | null => {
+    if (!root) return null;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+    for (
+        let n = walker.nextNode() as HTMLElement | null;
+        n;
+        n = walker.nextNode() as HTMLElement | null
+    ) {
+        if (isScrollable(n)) return n;
+    }
+    return null;
+};
+
+// Glide a scroll area to a position with the same easing as the mouse wheel.
+export const glideTo = (area: HTMLElement | null, top: number): boolean => {
+    if (!enabled || !area) return false;
+    lenisFor(area).scrollTo(top, { force: true, lerp: LERP });
+    return true;
 };
 
 export const initSmoothScroll = () => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    enabled = true;
     window.addEventListener('wheel', onWheel, { capture: true, passive: true });
 };

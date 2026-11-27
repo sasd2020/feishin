@@ -23,7 +23,7 @@ interface AlphabetIndexProps {
     children: ReactNode;
     // Index letter of every item, in list order; null hides the index
     keys: null | string[];
-    onJump: (index: number) => void;
+    onJump: (index: number, container: HTMLElement | null) => void;
     ref?: Ref<AlphabetIndexHandle>;
 }
 
@@ -39,8 +39,12 @@ export const AlphabetIndex = ({ children, keys, onJump, ref }: AlphabetIndexProp
     const [bubble, setBubble] = useState<null | string>(null);
     const [dragging, setDragging] = useState(false);
     const navRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const activeRef = useRef<null | string>(null);
     const draggingRef = useRef(false);
+    // After a jump the letter picked stays lit until the user scrolls on
+    // their own (a grid row can start with the previous letter's last items)
+    const holding = useRef(false);
     const bubbleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
     const { firstIndex, letters } = useMemo(() => {
@@ -64,6 +68,7 @@ export const AlphabetIndex = ({ children, keys, onJump, ref }: AlphabetIndexProp
         ref,
         () => ({
             setStartIndex: (index: number) => {
+                if (holding.current) return;
                 const k = keys?.[index] ?? null;
                 const prev = activeRef.current;
                 if (k === prev) return;
@@ -79,7 +84,8 @@ export const AlphabetIndex = ({ children, keys, onJump, ref }: AlphabetIndexProp
     const jump = (k: string) => {
         const i = firstIndex.get(k);
         if (i === undefined) return;
-        onJump(i);
+        holding.current = true;
+        onJump(i, containerRef.current);
         activeRef.current = k;
         setActive(k);
         showBubble(k);
@@ -154,6 +160,21 @@ export const AlphabetIndex = ({ children, keys, onJump, ref }: AlphabetIndexProp
         [],
     );
 
+    useEffect(() => {
+        const release = () => {
+            holding.current = false;
+        };
+        const opts = { capture: true, passive: true };
+        window.addEventListener('wheel', release, opts);
+        window.addEventListener('touchstart', release, opts);
+        window.addEventListener('keydown', release, opts);
+        return () => {
+            window.removeEventListener('wheel', release, opts);
+            window.removeEventListener('touchstart', release, opts);
+            window.removeEventListener('keydown', release, opts);
+        };
+    }, []);
+
     const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -187,7 +208,7 @@ export const AlphabetIndex = ({ children, keys, onJump, ref }: AlphabetIndexProp
     }, [bubble]);
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} ref={containerRef}>
             {children}
             {keys && keys.length > 0 && (
                 <>

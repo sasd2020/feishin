@@ -775,6 +775,11 @@ const BaseItemGridList = ({
 
     const imperativeHandle: ItemListHandle = useMemo(() => {
         return {
+            getOffsetForIndex: (index: number) => {
+                const meta = tableMetaRef.current;
+                if (!meta?.columnCount) return null;
+                return Math.floor(index / meta.columnCount) * (meta.itemHeight || 0);
+            },
             internalState,
             scrollToIndex: (index: number, options?: { align?: 'bottom' | 'center' | 'top' }) => {
                 scrollToIndex(index, options);
