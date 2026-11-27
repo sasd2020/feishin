@@ -19,6 +19,7 @@ export enum AppTheme {
     GRUVBOX_LIGHT = 'gruvboxLight',
     HIGH_CONTRAST_DARK = 'highContrastDark',
     HIGH_CONTRAST_LIGHT = 'highContrastLight',
+    JAPANDI_DARK = 'japandiDark',
     MATERIAL_DARK = 'materialDark',
     MATERIAL_LIGHT = 'materialLight',
     MONOKAI = 'monokai',

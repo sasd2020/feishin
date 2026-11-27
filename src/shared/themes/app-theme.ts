@@ -20,6 +20,7 @@ import { gruvboxDark } from '/@/shared/themes/gruvbox-dark/gruvbox-dark';
 import { gruvboxLight } from '/@/shared/themes/gruvbox-light/gruvbox-light';
 import { highContrastDark } from '/@/shared/themes/high-contrast-dark/high-contrast-dark';
 import { highContrastLight } from '/@/shared/themes/high-contrast-light/high-contrast-light';
+import { japandiDark } from '/@/shared/themes/japandi-dark/japandi-dark';
 import { materialDark } from '/@/shared/themes/material-dark/material-dark';
 import { materialLight } from '/@/shared/themes/material-light/material-light';
 import { monokai } from '/@/shared/themes/monokai/monokai';
@@ -54,6 +55,7 @@ export const appTheme: Record<AppTheme, AppThemeConfiguration> = {
     [AppTheme.GRUVBOX_LIGHT]: gruvboxLight,
     [AppTheme.HIGH_CONTRAST_DARK]: highContrastDark,
     [AppTheme.HIGH_CONTRAST_LIGHT]: highContrastLight,
+    [AppTheme.JAPANDI_DARK]: japandiDark,
     [AppTheme.MATERIAL_DARK]: materialDark,
     [AppTheme.MATERIAL_LIGHT]: materialLight,
     [AppTheme.MONOKAI]: monokai,

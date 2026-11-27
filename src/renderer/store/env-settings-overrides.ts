@@ -86,6 +86,7 @@ const APP_THEMES = new Set([
     'gruvboxLight',
     'highContrastDark',
     'highContrastLight',
+    'japandiDark',
     'materialDark',
     'materialLight',
     'monokai',
