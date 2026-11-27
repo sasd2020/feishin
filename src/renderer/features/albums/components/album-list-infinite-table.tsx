@@ -1,6 +1,8 @@
 import { UseSuspenseQueryOptions } from '@tanstack/react-query';
 
 import { api } from '/@/renderer/api';
+import { AlphabetIndex } from '/@/renderer/components/alphabet-index/alphabet-index';
+import { useAlphabetIndex } from '/@/renderer/components/alphabet-index/use-alphabet-index';
 import { useItemListInfiniteLoader } from '/@/renderer/components/item-list/helpers/item-list-infinite-loader';
 import { useItemListColumnReorder } from '/@/renderer/components/item-list/helpers/use-item-list-column-reorder';
 import { useItemListColumnResize } from '/@/renderer/components/item-list/helpers/use-item-list-column-resize';
@@ -10,6 +12,7 @@ import { ItemTableListColumn } from '/@/renderer/components/item-list/item-table
 import { ItemListTableComponentProps } from '/@/renderer/components/item-list/types';
 import { useListContext } from '/@/renderer/context/list-context';
 import { albumQueries } from '/@/renderer/features/albums/api/album-api';
+import { useAlbumAlphabetKeys } from '/@/renderer/features/albums/hooks/use-album-alphabet-keys';
 import {
     AlbumListQuery,
     AlbumListSort,
@@ -69,32 +72,38 @@ export const AlbumListInfiniteTable = ({
         itemListKey: ItemListKey.ALBUM,
     });
 
+    const alphabetKeys = useAlbumAlphabetKeys(query, serverId, itemCount);
+    const { handleRangeChanged, indexRef, listRef, onJump } = useAlphabetIndex(onRangeChanged);
+
     return (
-        <ItemTableList
-            autoFitColumns={autoFitColumns}
-            CellComponent={ItemTableListColumn}
-            columns={columns}
-            data={loadedItems}
-            enableAlternateRowColors={enableAlternateRowColors}
-            enableHeader={enableHeader}
-            enableHorizontalBorders={enableHorizontalBorders}
-            enableRowHoverHighlight={enableRowHoverHighlight}
-            enableSelection={enableSelection}
-            enableVerticalBorders={enableVerticalBorders}
-            getItem={getItem}
-            getItemIndex={getItemIndex}
-            getLoadedItems={getLoadedItems}
-            initialTop={{
-                to: scrollOffset ?? 0,
-                type: 'offset',
-            }}
-            itemCount={itemCount}
-            itemType={LibraryItem.ALBUM}
-            onColumnReordered={handleColumnReordered}
-            onColumnResized={handleColumnResized}
-            onRangeChanged={onRangeChanged}
-            onScrollEnd={handleOnScrollEnd}
-            size={size}
-        />
+        <AlphabetIndex keys={alphabetKeys} onJump={onJump} ref={indexRef}>
+            <ItemTableList
+                autoFitColumns={autoFitColumns}
+                CellComponent={ItemTableListColumn}
+                columns={columns}
+                data={loadedItems}
+                enableAlternateRowColors={enableAlternateRowColors}
+                enableHeader={enableHeader}
+                enableHorizontalBorders={enableHorizontalBorders}
+                enableRowHoverHighlight={enableRowHoverHighlight}
+                enableSelection={enableSelection}
+                enableVerticalBorders={enableVerticalBorders}
+                getItem={getItem}
+                getItemIndex={getItemIndex}
+                getLoadedItems={getLoadedItems}
+                initialTop={{
+                    to: scrollOffset ?? 0,
+                    type: 'offset',
+                }}
+                itemCount={itemCount}
+                itemType={LibraryItem.ALBUM}
+                onColumnReordered={handleColumnReordered}
+                onColumnResized={handleColumnResized}
+                onRangeChanged={handleRangeChanged}
+                onScrollEnd={handleOnScrollEnd}
+                ref={listRef}
+                size={size}
+            />
+        </AlphabetIndex>
     );
 };
